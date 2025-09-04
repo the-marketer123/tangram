@@ -1,4 +1,86 @@
-<DOCTYPE html><html>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tangram Puzzle</title>
   
+    <!-- p5.js -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.8/lib/p5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.8/lib/addons/p5.sound.min.js"></script>
+  
+    <style>
+        html, body {
+        margin: 0;
+        padding: 0;
+        }
+        canvas {
+        display: block;
+        }
+    </style>
+</head>
+<body>
+    <script>
+
+        /* Prerequisites */
+            let uiCanvas;
+            let user;
+
+            function setup() {
+            uiCanvas = createCanvas(windowWidth, windowHeight).elt;
+
+            user = (function (controls) {
+                controls.mX = controls.mY = 0;
+                controls.mP = controls.mC = false;
+                controls.kH = {};
+                controls.kC = {};
+
+                uiCanvas.onmousemove = function (e) {
+                controls.mX = e.offsetX;
+                controls.mY = e.offsetY;
+                };
+
+                uiCanvas.onmousedown = function () {
+                if (!controls.mP) controls.mC = true;
+                controls.mP = true;
+                };
+
+                uiCanvas.onmouseup = function () {
+                controls.mP = false;
+                };
+
+                document.onkeydown = function (e) {
+                const key = normalizeKey(e);
+                if (controls.kH[key] !== true) {
+                    controls.kC[key] = true;
+                } else {
+                    controls.kC[key] = false;
+                }
+                controls.kH[key] = true;
+                };
+
+                document.onkeyup = function (e) {
+                const key = normalizeKey(e);
+                controls.kH[key] = false;
+                };
+
+                controls.update = function () {
+                controls.kC = {};
+                controls.mC = false;
+                };
+
+                function normalizeKey(e) {
+                if (e.key.length === 1) {
+                    return e.key.toLowerCase(); // letters & symbols
+                }
+                return e.key; // keep ArrowUp, Shift, Enter, etc.
+                }
+
+                return controls;
+            })({});
+
+              function draw () {
+                
+              }
+</body>
 </html>
