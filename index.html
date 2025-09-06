@@ -13,6 +13,7 @@
         html, body {
         margin: 0;
         padding: 0;
+        overflow: hidden;
         }
         canvas {
         display: block;
@@ -36,17 +37,17 @@
                 controls.kC = {};
 
                 uiCanvas.onmousemove = function (e) {
-                controls.mX = e.offsetX;
-                controls.mY = e.offsetY;
+                    controls.mX = e.offsetX;
+                    controls.mY = e.offsetY;
                 };
 
                 uiCanvas.onmousedown = function () {
                 if (!controls.mP) controls.mC = true;
-                controls.mP = true;
+                    controls.mP = true;
                 };
 
                 uiCanvas.onmouseup = function () {
-                controls.mP = false;
+                    controls.mP = false;
                 };
 
                 document.onkeydown = function (e) {
@@ -56,17 +57,17 @@
                 } else {
                     controls.kC[key] = false;
                 }
-                controls.kH[key] = true;
+                    controls.kH[key] = true;
                 };
 
                 document.onkeyup = function (e) {
-                const key = normalizeKey(e);
-                controls.kH[key] = false;
+                    const key = normalizeKey(e);
+                    controls.kH[key] = false;
                 };
 
                 controls.update = function () {
-                controls.kC = {};
-                controls.mC = false;
+                    controls.kC = {};
+                    controls.mC = false;
                 };
 
                 function normalizeKey(e) {
@@ -78,9 +79,196 @@
 
                 return controls;
             })({});
+            }
 
-              function draw () {
-                
-              }
+        /*rest*/
+
+
+            let shapes = [
+                {
+                    draw: function(x,y){
+                        noStroke();
+                        fill(200,50,50);
+                        rect(x+0,y+0,150,50);
+                    },
+                    x: 0+window.innerWidth/2-175,
+                    y: 0+window.innerHeight/2-175,
+                    wx: window.innerWidth,
+                    wy: window.innerHeight,
+                },                
+                {
+                    draw: function(x,y){
+                        noStroke();
+                        fill(50,200,50);
+                        beginShape();
+
+                        // vertices
+                        vertex(x, y);
+                        vertex(x+150, y);
+                        vertex(x+150, y+257.243);
+                        vertex(x, y+300);
+
+
+                        endShape(CLOSE);                    
+                    },
+                    x: 0+window.innerWidth/2-175,
+                    y: 50+window.innerHeight/2-175,
+                    wx: window.innerWidth,
+                    wy: window.innerHeight,
+                },               
+                {
+                    draw: function(x,y){
+                        noStroke();
+                        fill(50,50,200);
+
+                        beginShape();
+
+                        // vertices
+                        vertex(x, y);
+                        vertex(x+200, y);
+                        vertex(x+200, y+150);
+                        vertex(x+150, y+150);
+                        vertex(x+150, y+50);
+                        vertex(x, y+50);
+
+                        endShape(CLOSE);
+                    },
+                    x: 150+window.innerWidth/2-175,
+                    y: 0+window.innerHeight/2-175,
+                    wx: window.innerWidth,
+                    wy: window.innerHeight,
+                },
+                {
+                    draw: function(x,y){
+                        noStroke();
+                        fill(50,200,200);
+
+                        beginShape();
+
+                        // vertices
+                        vertex(x, y);
+                        vertex(x+150, y);
+                        vertex(x+150, y+100);
+                        vertex(x+200, y+100);
+                        vertex(x+200, y+200);
+                        vertex(x, y+257.243);
+
+                        endShape(CLOSE);
+                    },
+                    x: 150+window.innerWidth/2-175,
+                    y: 50+window.innerHeight/2-175,
+                    wx: window.innerWidth,
+                    wy: window.innerHeight,
+                },
+                {
+                    draw: function(x,y){
+                        noStroke();
+                        fill(200,200,50);
+
+                        beginShape();
+
+                        // vertices
+                        vertex(x, y);
+                        vertex(x+350, y);
+                        vertex(x+350, y-100);
+
+
+                        endShape(CLOSE);
+                    },
+                    x: 0+window.innerWidth/2-175,
+                    y: 349.8+window.innerHeight/2-175,
+                    wx: window.innerWidth,
+                    wy: window.innerHeight,
+                },                
+                {
+                    draw: function(x,y){
+                        noStroke();
+                        fill(255);
+                        rect(x,y,50,50);
+                    },
+                    x: 0+window.innerWidth/2-275,
+                    y: 0+window.innerHeight/2-275,
+                    wx: window.innerWidth,
+                    wy: window.innerHeight,
+                },
+            ];
+            function checkMouse(shapes){
+                let x = user.mX, y = user.mY;
+                let shape1 = shapes[5];
+                let shape2 = shapes[4];
+                let shape3 = shapes[3];
+                let shape4 = shapes[2];
+                let shape5 = shapes[1];
+                let shape6 = shapes[0];
+                ///*
+                if (
+                    (x > shape2.x && x < shape2.x + 350 * (1-(y-shape2+100)/100) )//&& y > shape2.y - 100 && y < shape2.y - 100 + 100 * (1-(x-shape2.x)/350))
+                ){
+                    fill(255)
+                    ellipse(x,y,5,5);
+                }
+                //*/
+                /*
+                if (
+                    x > shape1.x && x < shape1.x + 50 && y > shape1.y && y < shape1.y + 50
+                ){
+                    cursor(HAND);
+                } else if (
+                    (x > shape2.x && x < shape2.x + 350 * (1-(y-shape2+100)/100) && y > shape2.y - 100 && y < shape2.y - 100 + 100 * (1-(x-shape2.x)/350))
+                ){
+
+                } else if (
+                    (x > shape3.x && x < shape3.x + 150 && y > shape3.y && y < shape3.y + 100)
+                    ||
+                    (x > shape3.x && x < shape3.x + 200 && y > shape3.y + 100 && y < shape3.y + 200)
+                    ||
+                    (x > shape3.x && x < shape3.x + 200 *  (1 - (y - shape3.y - 400) / 50 ) && y > shape3.y + 200 && y < shape3.y + 200 + 50 * (1-(x - shape3.x) / 200))
+                ){
+                    cursor(HAND);
+                } else if (
+                    (x > shape4.x && x < shape4.x + 200 && y > shape4.y && y < shape4.y + 50)
+                    ||
+                    (x > shape4.x + 150 && x < shape4.x + 200 && y > shape4.y + 50 && y < shape4.y + 150)
+                ){
+                    cursor(HAND);
+                } else if (
+                   (x > shape5.x && x < shape5.x + 150 && y > shape5.y && y < shape5.y + 257.243)
+                   ||
+                   (x > shape5.x && x < shape5.x + (150 *  (1 - (y - shape5.y - 257.143) / (300-257.243))) && y > shape5.y + 257.243 && y < shape5.y + 257.243 + (50 * (1 - (x - shape5.x) / 150)))
+                ){
+                    cursor(HAND);
+                } else {
+                    cursor(ARROW);
+                }
+                //*/
+            }
+            let j = false;
+            function draw () {
+                if (j == false) {
+                background(0);
+                stroke(255);
+                strokeWeight(5);
+                fill(0);
+                rect(window.innerWidth/2-177.6, window.innerHeight/2-177.6, 355, 355);
+                /*shapes.forEach(shape=>{
+                    shape.draw(shape.x, shape.y);
+                });*/
+                shapes[4].draw(shapes[4].x, shapes[4].y);
+                j = true
+                }
+                checkMouse(shapes);
+                user.update();
+            }
+
+            function windowResized() {
+                resizeCanvas(windowWidth, windowHeight);
+                shapes.forEach(shape=>{
+                    shape.x = window.innerWidth/2-175 + (shape.x - (shape.wx/2-175))
+                    shape.y = window.innerHeight/2-175 + (shape.y - (shape.wy/2-175))
+                    shape.wx = window.innerWidth;
+                    shape.wy = window.innerHeight;
+                });
+            }
+    </script>
 </body>
 </html>
