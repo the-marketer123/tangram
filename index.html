@@ -192,6 +192,7 @@
                     wy: window.innerHeight,
                 },
             ];
+            let selected = null;
             function checkMouse(shapes){
                 let x = user.mX, y = user.mY;
                 let shape1 = shapes[5];
@@ -200,23 +201,19 @@
                 let shape4 = shapes[2];
                 let shape5 = shapes[1];
                 let shape6 = shapes[0];
-                ///*
+
+                if (!user.mP) selected = null;
+
                 if (
-                    (x > shape2.x && x < shape2.x + 350 * (1-(y-shape2+100)/100) )//&& y > shape2.y - 100 && y < shape2.y - 100 + 100 * (1-(x-shape2.x)/350))
-                ){
-                    fill(255)
-                    ellipse(x,y,5,5);
-                }
-                //*/
-                /*
-                if (
-                    x > shape1.x && x < shape1.x + 50 && y > shape1.y && y < shape1.y + 50
+                    (x > shape1.x && x < shape1.x + 50 && y > shape1.y && y < shape1.y + 50)
                 ){
                     cursor(HAND);
+                    if (user.mP && selected === null) {selected = 5; bx = x; by = y; bsx = shape1.x; bsy = shape1.y;} else if (user.mP) {cursor(MOVE);}
                 } else if (
-                    (x > shape2.x && x < shape2.x + 350 * (1-(y-shape2+100)/100) && y > shape2.y - 100 && y < shape2.y - 100 + 100 * (1-(x-shape2.x)/350))
+                    (x < 350 + shape2.x && x > shape2.x + 350 + ( -350 * ((y - shape2.y + 100) / 100 )) && y < shape2.y && y > shape2.y + ( -100 * ((x- shape2.x) / 350 )))
                 ){
-
+                    cursor(HAND);
+                    if (user.mP && selected === null) {selected = 4; bx = x; by = y; bsx = shape2.x; bsy = shape2.y;} else if (user.mP) {cursor(MOVE);}
                 } else if (
                     (x > shape3.x && x < shape3.x + 150 && y > shape3.y && y < shape3.y + 100)
                     ||
@@ -225,38 +222,51 @@
                     (x > shape3.x && x < shape3.x + 200 *  (1 - (y - shape3.y - 400) / 50 ) && y > shape3.y + 200 && y < shape3.y + 200 + 50 * (1-(x - shape3.x) / 200))
                 ){
                     cursor(HAND);
+                    if (user.mP && selected === null) {selected = 3; bx = x; by = y; bsx = shape3.x; bsy = shape3.y;} else if (user.mP) {cursor(MOVE);}
                 } else if (
                     (x > shape4.x && x < shape4.x + 200 && y > shape4.y && y < shape4.y + 50)
                     ||
                     (x > shape4.x + 150 && x < shape4.x + 200 && y > shape4.y + 50 && y < shape4.y + 150)
                 ){
                     cursor(HAND);
+                    if (user.mP && selected === null) {selected = 2; bx = x; by = y; bsx = shape4.x; bsy = shape4.y;} else if (user.mP) {cursor(MOVE);}
                 } else if (
-                   (x > shape5.x && x < shape5.x + 150 && y > shape5.y && y < shape5.y + 257.243)
-                   ||
-                   (x > shape5.x && x < shape5.x + (150 *  (1 - (y - shape5.y - 257.143) / (300-257.243))) && y > shape5.y + 257.243 && y < shape5.y + 257.243 + (50 * (1 - (x - shape5.x) / 150)))
+                    (x > shape5.x && x < shape5.x + 150 && y > shape5.y && y < shape5.y + 257.243)
+                    ||
+                    (x > shape5.x && x < shape5.x + (150 *  (1 - (y - shape5.y - 257.143) / (300-257.243))) && y > shape5.y + 257.243 && y < shape5.y + 257.243 + (50 * (1 - (x - shape5.x) / 150)))
                 ){
+                    cursor(HAND)
+                    if (user.mP && selected === null) {selected = 1; bx = x; by = y; bsx = shape5.x; bsy = shape5.y;} else if (user.mP) {cursor(MOVE);}
+                } else if (                    
+                    (x > shape6.x && x < shape6.x + 150 && y > shape6.y && y < shape6.y + 50)
+                ) {
                     cursor(HAND);
+                    if (user.mP && selected === null) {selected = 0; bx = x; by = y; bsx = shape6.x; bsy = shape6.y;} else if (user.mP) {cursor(MOVE);}
                 } else {
                     cursor(ARROW);
                 }
-                //*/
             }
-            let j = false;
+            let bx = 0, by = 0, bsx = 0, bsy = 0;
+            function move () {
+                if (selected !== null) {
+                    let shape = shapes[selected];
+                    let x = user.mX, y = user.mY;
+                    shape.x = x - bx + bsx;
+                    shape.y = y - by + bsy;
+                }
+            }
             function draw () {
-                if (j == false) {
+                console.log(bx);
                 background(0);
                 stroke(255);
                 strokeWeight(5);
                 fill(0);
                 rect(window.innerWidth/2-177.6, window.innerHeight/2-177.6, 355, 355);
-                /*shapes.forEach(shape=>{
+                shapes.forEach(shape=>{
                     shape.draw(shape.x, shape.y);
-                });*/
-                shapes[4].draw(shapes[4].x, shapes[4].y);
-                j = true
-                }
+                });
                 checkMouse(shapes);
+                move();
                 user.update();
             }
 
