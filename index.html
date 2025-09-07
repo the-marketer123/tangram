@@ -28,58 +28,97 @@
             let user;
 
             function setup() {
-            uiCanvas = createCanvas(windowWidth, windowHeight).elt;
+                uiCanvas = createCanvas(windowWidth, windowHeight).elt;
 
-            user = (function (controls) {
-                controls.mX = controls.mY = 0;
-                controls.mP = controls.mC = false;
-                controls.kH = {};
-                controls.kC = {};
-
-                uiCanvas.onmousemove = function (e) {
-                    controls.mX = e.offsetX;
-                    controls.mY = e.offsetY;
-                };
-
-                uiCanvas.onmousedown = function () {
-                if (!controls.mP) controls.mC = true;
-                    controls.mP = true;
-                };
-
-                uiCanvas.onmouseup = function () {
-                    controls.mP = false;
-                };
-
-                document.onkeydown = function (e) {
-                const key = normalizeKey(e);
-                if (controls.kH[key] !== true) {
-                    controls.kC[key] = true;
-                } else {
-                    controls.kC[key] = false;
-                }
-                    controls.kH[key] = true;
-                };
-
-                document.onkeyup = function (e) {
-                    const key = normalizeKey(e);
-                    controls.kH[key] = false;
-                };
-
-                controls.update = function () {
+                user = (function (controls) {
+                    controls.mX = controls.mY = 0;
+                    controls.mP = controls.mC = false;
+                    controls.kH = {};
                     controls.kC = {};
-                    controls.mC = false;
-                };
 
-                function normalizeKey(e) {
-                if (e.key.length === 1) {
-                    return e.key.toLowerCase(); // letters & symbols
-                }
-                return e.key; // keep ArrowUp, Shift, Enter, etc.
-                }
+                    // Mouse movement
+                    uiCanvas.onmousemove = function (e) {
+                        controls.mX = e.offsetX;
+                        controls.mY = e.offsetY;
+                    };
 
-                return controls;
-            })({});
+                    // Mouse down
+                    uiCanvas.onmousedown = function () {
+                        if (!controls.mP) controls.mC = true;
+                        controls.mP = true;
+                    };
+
+                    // Mouse up
+                    uiCanvas.onmouseup = function () {
+                        controls.mP = false;
+                    };
+
+                    // Touch movement (track only first touch)
+                    uiCanvas.ontouchmove = function (e) {
+                        if (e.touches.length > 0) {
+                            const rect = uiCanvas.getBoundingClientRect();
+                            const touch = e.touches[0]; // first finger only
+                            controls.mX = touch.clientX - rect.left;
+                            controls.mY = touch.clientY - rect.top;
+                        }
+                        e.preventDefault(); // stop page scrolling/zooming
+                    };
+
+                    // Touch down (first touch only)
+                    uiCanvas.ontouchstart = function (e) {
+                        if (!controls.mP) controls.mC = true;
+                        controls.mP = true;
+
+                        if (e.touches.length > 0) {
+                            const rect = uiCanvas.getBoundingClientRect();
+                            const touch = e.touches[0];
+                            controls.mX = touch.clientX - rect.left;
+                            controls.mY = touch.clientY - rect.top;
+                        }
+                        e.preventDefault();
+                    };
+
+                    // Touch up (when all touches released)
+                    uiCanvas.ontouchend = function (e) {
+                        if (e.touches.length === 0) {
+                            controls.mP = false;
+                        }
+                        e.preventDefault();
+                    };
+
+                    // Keyboard down
+                    document.onkeydown = function (e) {
+                        const key = normalizeKey(e);
+                        if (controls.kH[key] !== true) {
+                            controls.kC[key] = true;
+                        } else {
+                            controls.kC[key] = false;
+                        }
+                        controls.kH[key] = true;
+                    };
+
+                    // Keyboard up
+                    document.onkeyup = function (e) {
+                        const key = normalizeKey(e);
+                        controls.kH[key] = false;
+                    };
+
+                    controls.update = function () {
+                        controls.kC = {};
+                        controls.mC = false;
+                    };
+
+                    function normalizeKey(e) {
+                        if (e.key.length === 1) {
+                            return e.key.toLowerCase(); // letters & symbols
+                        }
+                        return e.key; // keep ArrowUp, Shift, Enter, etc.
+                    }
+
+                    return controls;
+                })({});
             }
+
 
         /*rest*/
 
